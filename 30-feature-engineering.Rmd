@@ -29,11 +29,15 @@ BMI can be underweight, healthy, overweight and obese accrodin to their respecti
 
 ```{r}
 
-cat_bmi <- function(df){
-df$bmi %>% cut(breaks=c(0, 18.5, 24.9, 30,Inf), 
+cat_bmi <- function(x){
+x %>% cut(breaks=c(0, 18.5, 24.9, 30,Inf), 
                    labels=c("under","Healthy","Over","Obese"))
 }
-diabetes$bmi_cat <- diabetes %>%cat_bmi
+bmi_cat <- function(df){
+df%>% 
+  mutate_at(c("bmi"),list(bmi_cat=cat_bmi))
+  }
+diabetes %>% bmi_cat
 ```
 ## Stadardize Age
 Lets's standardize the age. Not having NA would not change anthing as there is no NA in 
