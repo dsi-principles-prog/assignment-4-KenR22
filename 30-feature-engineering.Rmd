@@ -1,0 +1,64 @@
+---
+title: "30-feature-engineering"
+output: html_notebook
+---
+## Feature Engineering
+
+Catagorize Insulin Level.
+
+First let's try to catagorise the insulin level. If the insulin injected is above 166 then it is abnormal.
+
+```{r cat_insulin}
+cat2 <- function(x)ifelse(x<166,"Normal","Abnormal")
+
+cat_insulin <- function(df)
+{df%>% 
+  mutate_at(c("insulin"),list(insulin_cat=cat2)) 
+}
+
+
+diabetes %>% cat_insulin
+```
+## Catagorize BMI
+Now we categorise BMI.
+
+BMI can be underweight, healthy, overweight and obese accrodin to their respective BMI.
+
+
+
+
+```{r}
+
+cat_bmi <- function(df){
+df$bmi %>% cut(breaks=c(0, 18.5, 24.9, 30,Inf), 
+                   labels=c("under","Healthy","Over","Obese"))
+}
+diabetes$bmi_cat <- diabetes %>%cat_bmi
+```
+## Stadardize Age
+Lets's standardize the age. Not having NA would not change anthing as there is no NA in 
+
+```{r standardize}
+scale2 <- function(x,na.rm=FALSE )(x-mean(x,na.rm=na.rm))/sd(x,na.rm=na.rm)
+std_age <- function(df)
+{df%>% 
+  mutate_at(c("age"),list(age_std=scale2)) 
+}
+
+diabetes %>% std_age()
+
+
+```
+
+## Detecting Early Marriage
+
+If a woman has 2 or more pregnancy before 23. We can classify it as early marriage.
+
+
+```{r early_not}
+
+early2 <- function(x)ifelse(x$age<23&x$pregnancies>2,"Early","Not Early")
+diabetes$early <- diabetes %>% early2
+
+```
+
